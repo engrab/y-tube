@@ -1,13 +1,16 @@
 import { v2 as cloudinary } from 'cloudinary';
 
 import fs from "fs"
+import path from "path"
 
- // Configuration
-    cloudinary.config({
-        cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
-        api_key: process.env.CLOUDINARY_API_KEY,
-        api_secret: process.env.CLOUDINARY_API_SECRET // Click 'View API Keys' above to copy your API secret
-    });
+
+
+// Configuration
+// cloudinary.config({
+//     cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+//     api_key: process.env.CLOUDINARY_API_KEY,
+//     api_secret: process.env.CLOUDINARY_API_SECRET // Click 'View API Keys' above to copy your API secret
+// });
 // this is IIFE
 // (async function () {
 
@@ -54,15 +57,16 @@ const uploadOnCloudinary = async (localPath) => {
 
     try {
 
-        if (!localPath) return nulll;
+        if (!localPath) return null;
         // upload the file on cloudinary
-        const response = await cloudinary.v2.uploader.upload(localPath, { resource_type: "auto" })
+        const response = await cloudinary.uploader.upload(localPath, { resource_type: "auto" })
         console.log("file uploaded succesfully", response.url)
         return response
 
     } catch (error) {
 
-        fs.unlinkSync(localPath) // remove corrupted file from our server
+        //  fs.unlinkSync(localPath) // remove corrupted file from our server
+        if (fs.existsSync(localPath)) fs.unlinkSync(localPath);
         return null
     }
 }
