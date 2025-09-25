@@ -8,7 +8,7 @@ const registerUser = asyncHandler(async (req, res) => {
 
     // get user detail from frontend
     // validation - not empty
-    // check if user already exist - username and email
+    // check if user already exist - userName and email
     // check for image and check for avatar
     // upload them to cloudinary - avatar
     // create user object - create enty in db
@@ -17,7 +17,7 @@ const registerUser = asyncHandler(async (req, res) => {
     // return response
 
     const { userName, fullName, email, password } = req.body
-    console.log("username: ", userName)
+    console.log("userName: ", userName)
 
     if (
         [userName, fullName, email, password].some((field) => field?.trim() === "")
@@ -30,11 +30,16 @@ const registerUser = asyncHandler(async (req, res) => {
     })
 
     if (existUser) {
-        throw new ApiError(409, "User with email or username already exist")
+        throw new ApiError(409, "User with email or userName already exist")
     }
 
     const avatarLocalPath = req.files?.avatar[0]?.path;
-    const coverImageLocalPath = req.files?.coverImage[0]?.path;
+    // const coverImageLocalPath = req.files?.coverImage[0]?.path;
+
+    let coverImageLocalPath;
+    if (req.files && Array.isArray(req.files.coverImage) && req.files.coverImage.length > 0) {
+        coverImageLocalPath = req.files.coverImage[0].path
+    }
 
     console.log("req.files:", req.files);
     console.log("coverImageLocalPath:", coverImageLocalPath);
@@ -46,6 +51,8 @@ const registerUser = asyncHandler(async (req, res) => {
 
     const avatar = await uploadOnCloudinary(avatarLocalPath)
     const coverImage = await uploadOnCloudinary(coverImageLocalPath)
+
+
 
     console.log(`avatar: ${avatar}`)
 
