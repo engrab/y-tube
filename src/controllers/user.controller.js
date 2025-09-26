@@ -4,6 +4,7 @@ import { User } from "../models/user.model.js"
 import { uploadOnCloudinary } from "../utils/cloudinary.js"
 import { ApiResponse } from "../utils/ApiResponse.js";
 
+<<<<<<< HEAD
 const generateAccessAndRefreshToken = async (userId) => {
 
     try {
@@ -24,11 +25,13 @@ const generateAccessAndRefreshToken = async (userId) => {
     }
 }
 
+=======
+>>>>>>> 7f2bb969cef493d9e489f5754fcd2ba5656e96a7
 const registerUser = asyncHandler(async (req, res) => {
 
     // get user detail from frontend
     // validation - not empty
-    // check if user already exist - username and email
+    // check if user already exist - userName and email
     // check for image and check for avatar
     // upload them to cloudinary - avatar
     // create user object - create enty in db
@@ -37,7 +40,11 @@ const registerUser = asyncHandler(async (req, res) => {
     // return response
 
     const { userName, fullName, email, password } = req.body
+<<<<<<< HEAD
     console.log("username: ", userName)
+=======
+    console.log("userName: ", userName)
+>>>>>>> 7f2bb969cef493d9e489f5754fcd2ba5656e96a7
 
     if (
         [userName, fullName, email, password].some((field) => field?.trim() === "")
@@ -50,13 +57,23 @@ const registerUser = asyncHandler(async (req, res) => {
     })
 
     if (existUser) {
+<<<<<<< HEAD
         throw new ApiError(409, "User with email or username already exist")
+=======
+        throw new ApiError(409, "User with email or userName already exist")
+>>>>>>> 7f2bb969cef493d9e489f5754fcd2ba5656e96a7
     }
 
     const avatarLocalPath = req.files?.avatar[0]?.path;
-    const coverImageLocalPath = req.files?.coverImage[0]?.path;
+    // const coverImageLocalPath = req.files?.coverImage[0]?.path;
+
+    let coverImageLocalPath;
+    if (req.files && Array.isArray(req.files.coverImage) && req.files.coverImage.length > 0) {
+        coverImageLocalPath = req.files.coverImage[0].path
+    }
 
     console.log("req.files:", req.files);
+    console.log("coverImageLocalPath:", coverImageLocalPath);
     console.log("avatarLocalPath:", avatarLocalPath);
 
     if (!avatarLocalPath) {
@@ -66,9 +83,17 @@ const registerUser = asyncHandler(async (req, res) => {
     const avatar = await uploadOnCloudinary(avatarLocalPath)
     const coverImage = await uploadOnCloudinary(coverImageLocalPath)
 
+<<<<<<< HEAD
     console.log(`${avatar}`);
 
 
+=======
+
+
+    console.log(`avatar: ${avatar}`)
+
+
+>>>>>>> 7f2bb969cef493d9e489f5754fcd2ba5656e96a7
     if (!avatar) {
         throw new ApiError(400, "Avatar file is required")
     }
