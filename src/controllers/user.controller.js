@@ -4,8 +4,6 @@ import { User } from "../models/user.model.js"
 import { uploadOnCloudinary } from "../utils/cloudinary.js"
 import { ApiResponse } from "../utils/ApiResponse.js";
 import jwt from "jsonwebtoken"
-import { use } from "react";
-import { upload } from "../middlewares/multer.middleware.js";
 
 
 const generateAccessAndRefreshToken = async (userId) => {
@@ -60,7 +58,6 @@ const registerUser = asyncHandler(async (req, res) => {
 
         throw new ApiError(409, "User with email or username already exist")
 
-        throw new ApiError(409, "User with email or userName already exist")
     }
 
     const avatarLocalPath = req.files?.avatar[0]?.path;
