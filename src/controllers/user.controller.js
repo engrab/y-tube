@@ -171,8 +171,8 @@ const logOutUser = asyncHandler(async (req, res) => {
     await User.findByIdAndUpdate(
         req.user._id,
         {
-            $set: {
-                refreshToken: undefined
+            $unset: {
+                refreshToken: 1 // just to invalidate the old refresh token
             }
         }
     )
@@ -373,9 +373,9 @@ const updateUserCoverImage = asyncHandler(async (req, res) => {
         )
 })
 
-const getUserChannelProfile = asyncHandler(async(req, res) => {
+const getUserChannelProfile = asyncHandler(async (req, res) => {
 
-    const {userName} = req.params
+    const { userName } = req.params
 
     if (!userName.trime()) {
         throw new ApiError(400, "userName is missing")
@@ -410,10 +410,10 @@ const getUserChannelProfile = asyncHandler(async(req, res) => {
                 },
                 channelsSubscribedToCount: {
                     $size: "$subscribedTo"
-                }, 
+                },
                 isSubscribed: {
                     $cond: {
-                        if: {$in: [req.user?._id, "$subscribers.subscription"]},
+                        if: { $in: [req.user?._id, "$subscribers.subscription"] },
                         then: true,
                         else: false
                     }
@@ -441,19 +441,19 @@ const getUserChannelProfile = asyncHandler(async(req, res) => {
     console.log(channel);
 
     return res
-    .status(200)
-    .json(
-        new ApiResponse(
-            200,
-            channel[0],
-            "user channel fetch successfully"
+        .status(200)
+        .json(
+            new ApiResponse(
+                200,
+                channel[0],
+                "user channel fetch successfully"
+            )
         )
-    )
-    
-    
+
+
 })
 
-const getWatchHistory = asyncHandler(async(req, res) => {
+const getWatchHistory = asyncHandler(async (req, res) => {
 
     const user = await User.aggregate([
         {
@@ -498,14 +498,14 @@ const getWatchHistory = asyncHandler(async(req, res) => {
     ])
 
     return res
-    .status(200)
-    .json(
-        new ApiResponse(
-            200,
-            user[0].watchHistory,
-            "watch history fetch successfully"
+        .status(200)
+        .json(
+            new ApiResponse(
+                200,
+                user[0].watchHistory,
+                "watch history fetch successfully"
+            )
         )
-    )
 })
 
 export {
